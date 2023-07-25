@@ -5,6 +5,10 @@
 const puppeteer = require("puppeteer");
 const express = require("express");
 const router = express.Router();
+const { EventEmitter } = require("events");
+
+const customEmitter = new EventEmitter();
+customEmitter.setMaxListeners(0); // Set max
 
 const takeScreenshot = async (url) => {
   const browser = await puppeteer.launch();
@@ -32,6 +36,9 @@ router.get("/", async (req, res) => {
 
     const screenshot = await takeScreenshot(url);
 
+    // Emit a custom event with the screenshot data
+    customEmitter.emit("screenshotTaken", screenshot);
+
     res.setHeader("Content-Type", "image/jpeg");
     console.log("screenshot sent");
     res.end(screenshot);
@@ -39,6 +46,12 @@ router.get("/", async (req, res) => {
     console.error("Error taking screenshot:", error);
     res.status(500).end();
   }
+});
+
+// Custom event listener
+customEmitter.on("screenshotTaken", (screenshotData) => {
+  // Do something with the screenshot data
+  console.log("Screenshot data received:", screenshotData);
 });
 
 module.exports = router;
