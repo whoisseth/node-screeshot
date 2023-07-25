@@ -6,6 +6,11 @@
     "puppeteer": "^20.9.0"
   },
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "babel-node server.js"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.22.9",
+    "@babel/node": "^7.22.6",
+    "@babel/preset-env": "^7.22.9"
   }
 }
